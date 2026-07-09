@@ -1,5 +1,7 @@
-package com.kang.nettyim.protocol;
+package com.kang.nettyim.protocol.response;
 
+import com.kang.nettyim.protocol.Command;
+import com.kang.nettyim.protocol.Packet;
 import lombok.Data;
 
 @Data

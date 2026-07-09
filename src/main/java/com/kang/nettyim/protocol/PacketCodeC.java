@@ -1,5 +1,9 @@
 package com.kang.nettyim.protocol;
 
+import com.kang.nettyim.protocol.request.LoginRequestPacket;
+import com.kang.nettyim.protocol.request.MessageRequestPacket;
+import com.kang.nettyim.protocol.response.LoginResponsePacket;
+import com.kang.nettyim.protocol.response.MessageResponsePacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 
@@ -19,6 +23,8 @@ public class PacketCodeC {
         COMMAND_TO_PACK_TYPE = new HashMap<>();
         COMMAND_TO_PACK_TYPE.put(Command.LOGIN_REQUEST, LoginRequestPacket.class);
         COMMAND_TO_PACK_TYPE.put(Command.LOGIN_RESPONSE, LoginResponsePacket.class);
+        COMMAND_TO_PACK_TYPE.put(Command.MESSAGE_REQUEST, MessageRequestPacket.class);
+        COMMAND_TO_PACK_TYPE.put(Command.MESSAGE_RESPONSE, MessageResponsePacket.class);
 
         ALGORITHM_TO_SERIALIZER = new HashMap<>();
         ALGORITHM_TO_SERIALIZER.put(SerializerAlgorithm.JSON, new JSONSerializer());

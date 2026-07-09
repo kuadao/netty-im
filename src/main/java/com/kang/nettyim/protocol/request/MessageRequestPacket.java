@@ -1,0 +1,16 @@
+package com.kang.nettyim.protocol.request;
+
+import com.kang.nettyim.protocol.Command;
+import com.kang.nettyim.protocol.Packet;
+import lombok.Data;
+
+@Data
+public class MessageRequestPacket extends Packet {
+
+    private String message;
+
+    @Override
+    public Byte getCommand() {
+        return Command.MESSAGE_REQUEST;
+    }
+}

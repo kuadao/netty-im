@@ -26,7 +26,7 @@ public class NettyServer {
                     protected void initChannel(SocketChannel ch) {
                         ch.pipeline().addLast(new ServerHandler());
                     }
-                }).bind(8000)
+                }).bind(6000)
                 .sync();
     }
 }

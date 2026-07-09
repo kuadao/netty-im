@@ -2,10 +2,10 @@ package com.kang.nettyim.client;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONWriter;
-import com.kang.nettyim.protocol.LoginRequestPacket;
-import com.kang.nettyim.protocol.LoginResponsePacket;
-import com.kang.nettyim.protocol.Packet;
-import com.kang.nettyim.protocol.PacketCodeC;
+import com.kang.nettyim.protocol.*;
+import com.kang.nettyim.protocol.request.LoginRequestPacket;
+import com.kang.nettyim.protocol.response.LoginResponsePacket;
+import com.kang.nettyim.protocol.response.MessageResponsePacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -31,7 +31,16 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         ByteBuf in = (ByteBuf) msg;
         Packet packet = PacketCodeC.INSTANCE.decode(in);
         if (packet instanceof LoginResponsePacket loginResponsePacket) {
-            System.out.println(JSON.toJSONString(loginResponsePacket, JSONWriter.Feature.PrettyFormat));
+            System.out.println(new Date() + ": 收到服务端消息 - " + loginResponsePacket.getReason());
+            if (loginResponsePacket.isSuccess()) {
+                LoginUtil.markLogin(ctx.channel());
+                System.out.println(new Date() + ": 客户端登录成功");
+                NettyClient.startConsoleThread(ctx.channel());
+            } else {
+                System.out.println(new Date() + ": 客户端登录失败");
+            }
+        } else if (packet instanceof MessageResponsePacket messageResponsePacket) {
+            System.out.println(new Date() + ": 收到服务端消息 - " + messageResponsePacket.getMessage());
         }
     }
 }
