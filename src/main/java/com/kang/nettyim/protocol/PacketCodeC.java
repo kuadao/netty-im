@@ -8,6 +8,8 @@ import java.util.Map;
 
 public class PacketCodeC {
 
+    public static final PacketCodeC INSTANCE = new PacketCodeC();
+
     private static final int MAGIC_NUMBER = 0x12345678;
 
     private static final Map<Byte, Class<? extends Packet>> COMMAND_TO_PACK_TYPE;
@@ -16,14 +18,15 @@ public class PacketCodeC {
     static {
         COMMAND_TO_PACK_TYPE = new HashMap<>();
         COMMAND_TO_PACK_TYPE.put(Command.LOGIN_REQUEST, LoginRequestPacket.class);
+        COMMAND_TO_PACK_TYPE.put(Command.LOGIN_RESPONSE, LoginResponsePacket.class);
 
         ALGORITHM_TO_SERIALIZER = new HashMap<>();
         ALGORITHM_TO_SERIALIZER.put(SerializerAlgorithm.JSON, new JSONSerializer());
     }
 
-    public ByteBuf encode(Packet packet) {
+    public ByteBuf encode(Packet packet, ByteBufAllocator allocator) {
         byte[] bytes = Serializer.DEFAULT.serialize(packet);
-        ByteBuf buffer = ByteBufAllocator.DEFAULT.ioBuffer();
+        ByteBuf buffer = allocator.ioBuffer();
         buffer.writeInt(MAGIC_NUMBER);
         buffer.writeByte(packet.getVersion());
         buffer.writeByte(Serializer.DEFAULT.getSerializerAlgorithm());
@@ -55,7 +58,7 @@ public class PacketCodeC {
         loginRequestPacket.setUserId(1);
         loginRequestPacket.setPassword("10086");
         PacketCodeC packetCodeC = new PacketCodeC();
-        ByteBuf encode = packetCodeC.encode(loginRequestPacket);
+        ByteBuf encode = packetCodeC.encode(loginRequestPacket, ByteBufAllocator.DEFAULT);
         Packet decode = packetCodeC.decode(encode);
         System.out.println(decode);
     }
