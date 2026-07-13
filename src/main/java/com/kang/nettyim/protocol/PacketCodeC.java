@@ -30,9 +30,8 @@ public class PacketCodeC {
         ALGORITHM_TO_SERIALIZER.put(SerializerAlgorithm.JSON, new JSONSerializer());
     }
 
-    public ByteBuf encode(Packet packet, ByteBufAllocator allocator) {
+    public ByteBuf encode(Packet packet, ByteBuf buffer) {
         byte[] bytes = Serializer.DEFAULT.serialize(packet);
-        ByteBuf buffer = allocator.ioBuffer();
         buffer.writeInt(MAGIC_NUMBER);
         buffer.writeByte(packet.getVersion());
         buffer.writeByte(Serializer.DEFAULT.getSerializerAlgorithm());
@@ -40,6 +39,10 @@ public class PacketCodeC {
         buffer.writeInt(bytes.length);
         buffer.writeBytes(bytes);
         return buffer;
+    }
+
+    public ByteBuf encode(Packet packet, ByteBufAllocator allocator) {
+        return encode(packet, allocator.ioBuffer());
     }
 
     public Packet decode(ByteBuf buffer) {

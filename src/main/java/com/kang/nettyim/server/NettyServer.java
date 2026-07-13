@@ -1,5 +1,7 @@
 package com.kang.nettyim.server;
 
+import com.kang.nettyim.protocol.PacketDecoder;
+import com.kang.nettyim.protocol.PacketEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -24,13 +26,11 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) {
-                        ch.pipeline().addLast(new InBoundHandlerA());
-                        ch.pipeline().addLast(new InBoundHandlerB());
-                        ch.pipeline().addLast(new InBoundHandlerC());
+                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(new LoginRequestHandler());
+                        ch.pipeline().addLast(new MessageRequestHandler());
 
-                        ch.pipeline().addLast(new OutboundHandlerA());
-                        ch.pipeline().addLast(new OutboundHandlerB());
-                        ch.pipeline().addLast(new OutboundHandlerC());
+                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 }).bind(6000)
                 .sync();

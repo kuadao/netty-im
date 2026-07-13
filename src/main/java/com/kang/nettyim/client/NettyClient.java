@@ -2,6 +2,8 @@ package com.kang.nettyim.client;
 
 import com.kang.nettyim.protocol.LoginUtil;
 import com.kang.nettyim.protocol.PacketCodeC;
+import com.kang.nettyim.protocol.PacketDecoder;
+import com.kang.nettyim.protocol.PacketEncoder;
 import com.kang.nettyim.protocol.request.MessageRequestPacket;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
@@ -29,7 +31,11 @@ public class NettyClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                              @Override
                              protected void initChannel(SocketChannel ch) {
-                                 ch.pipeline().addLast(new ClientHandler());
+                                 ch.pipeline().addLast(new PacketDecoder());
+                                 ch.pipeline().addLast(new LoginResponseHandler());
+                                 ch.pipeline().addLast(new MessageResponseHandler());
+
+                                 ch.pipeline().addLast(new PacketEncoder());
                              }
                          }
                 )
