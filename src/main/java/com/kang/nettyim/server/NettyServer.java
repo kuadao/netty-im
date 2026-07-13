@@ -24,7 +24,13 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) {
-                        ch.pipeline().addLast(new ServerHandler());
+                        ch.pipeline().addLast(new InBoundHandlerA());
+                        ch.pipeline().addLast(new InBoundHandlerB());
+                        ch.pipeline().addLast(new InBoundHandlerC());
+
+                        ch.pipeline().addLast(new OutboundHandlerA());
+                        ch.pipeline().addLast(new OutboundHandlerB());
+                        ch.pipeline().addLast(new OutboundHandlerC());
                     }
                 }).bind(6000)
                 .sync();
