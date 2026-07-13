@@ -1,18 +1,14 @@
 package com.kang.nettyim.client;
 
-import com.kang.nettyim.protocol.LoginUtil;
-import com.kang.nettyim.protocol.PacketCodeC;
+import com.kang.nettyim.protocol.*;
 import com.kang.nettyim.protocol.request.MessageRequestPacket;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.util.concurrent.Future;
-import io.netty.util.concurrent.GenericFutureListener;
 
 import java.util.Date;
 import java.util.Scanner;
@@ -29,7 +25,12 @@ public class NettyClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                              @Override
                              protected void initChannel(SocketChannel ch) {
-                                 ch.pipeline().addLast(new ClientHandler());
+                                 ch.pipeline().addLast(new SplitHandler());
+                                 ch.pipeline().addLast(new PacketDecoder());
+                                 ch.pipeline().addLast(new LoginResponseHandler());
+                                 ch.pipeline().addLast(new MessageResponseHandler());
+
+                                 ch.pipeline().addLast(new PacketEncoder());
                              }
                          }
                 )

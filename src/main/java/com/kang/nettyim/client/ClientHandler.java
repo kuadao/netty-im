@@ -1,46 +1,25 @@
 package com.kang.nettyim.client;
 
-import com.kang.nettyim.protocol.LoginUtil;
-import com.kang.nettyim.protocol.Packet;
-import com.kang.nettyim.protocol.PacketCodeC;
-import com.kang.nettyim.protocol.request.LoginRequestPacket;
-import com.kang.nettyim.protocol.response.LoginResponsePacket;
-import com.kang.nettyim.protocol.response.MessageResponsePacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
-import java.util.Date;
+import java.nio.charset.StandardCharsets;
 
 public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        System.out.println(new Date() + ": 客户端登录开始");
-
-        LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
-        loginRequestPacket.setUserId(Integer.MAX_VALUE);
-        loginRequestPacket.setUsername("张三");
-        loginRequestPacket.setPassword("10086");
-        ByteBuf buffer = PacketCodeC.INSTANCE.encode(loginRequestPacket, ctx.alloc());
-        ctx.channel().writeAndFlush(buffer);
+        for (int i = 0; i < 1000; i++) {
+            ByteBuf buffer = getBuffer(ctx);
+            ctx.channel().writeAndFlush(buffer);
+        }
     }
 
-    @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        ByteBuf in = (ByteBuf) msg;
-        Packet packet = PacketCodeC.INSTANCE.decode(in);
-        if (packet instanceof LoginResponsePacket loginResponsePacket) {
-            System.out.println(new Date() + ": 收到服务端消息 - " + loginResponsePacket.getReason());
-            if (loginResponsePacket.isSuccess()) {
-                LoginUtil.markLogin(ctx.channel());
-                System.out.println(new Date() + ": 客户端登录成功");
-                NettyClient.startConsoleThread(ctx.channel());
-            } else {
-                System.out.println(new Date() + ": 客户端登录失败");
-            }
-        } else if (packet instanceof MessageResponsePacket messageResponsePacket) {
-            System.out.println(new Date() + ": 收到服务端消息 - " + messageResponsePacket.getMessage());
-        }
+    private ByteBuf getBuffer(ChannelHandlerContext ctx) {
+        byte[] bytes = "你好，欢迎关注我的微信公众号，《张三的博客》！".getBytes(StandardCharsets.UTF_8);
+        ByteBuf buffer = ctx.alloc().buffer();
+        buffer.writeBytes(bytes);
+        return buffer;
     }
 }
