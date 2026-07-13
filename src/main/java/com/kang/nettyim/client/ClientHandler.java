@@ -1,8 +1,8 @@
 package com.kang.nettyim.client;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONWriter;
-import com.kang.nettyim.protocol.*;
+import com.kang.nettyim.protocol.LoginUtil;
+import com.kang.nettyim.protocol.Packet;
+import com.kang.nettyim.protocol.PacketCodeC;
 import com.kang.nettyim.protocol.request.LoginRequestPacket;
 import com.kang.nettyim.protocol.response.LoginResponsePacket;
 import com.kang.nettyim.protocol.response.MessageResponsePacket;
