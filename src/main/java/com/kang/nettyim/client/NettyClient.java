@@ -5,6 +5,7 @@ import com.kang.nettyim.protocol.request.MessageRequestPacket;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -38,6 +39,7 @@ public class NettyClient {
                 .addListener(future -> {
                     if (future.isSuccess()) {
                         System.out.println(new Date() + ": 连接服务器成功");
+                        startConsoleThread(((ChannelFuture) future).channel());
                     } else {
                         System.out.println(new Date() + ": 未成功连接到服务器");
                     }

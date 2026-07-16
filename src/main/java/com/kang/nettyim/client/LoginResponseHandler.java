@@ -18,18 +18,24 @@ public class LoginResponseHandler extends SimpleChannelInboundHandler<LoginRespo
         loginRequestPacket.setUserId(Integer.MAX_VALUE);
         loginRequestPacket.setUsername("张三");
         loginRequestPacket.setPassword("10086");
-        ctx.channel().writeAndFlush(loginRequestPacket);
+//        ctx.channel().writeAndFlush(loginRequestPacket);
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LoginResponsePacket msg) throws Exception {
         System.out.println(new Date() + ": 收到服务端消息 - " + msg.getReason());
-        if (msg.isSuccess()) {
-            LoginUtil.markLogin(ctx.channel());
-            System.out.println(new Date() + ": 客户端登录成功");
-            NettyClient.startConsoleThread(ctx.channel());
-        } else {
-            System.out.println(new Date() + ": 客户端登录失败");
-        }
+//        if (msg.isSuccess()) {
+//            LoginUtil.markLogin(ctx.channel());
+//            System.out.println(new Date() + ": 客户端登录成功");
+//            NettyClient.startConsoleThread(ctx.channel());
+//        } else {
+//            System.out.println(new Date() + ": 客户端登录失败");
+//        }
+//        NettyClient.startConsoleThread(ctx.channel());
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) {
+        System.out.println("客户端连接被关闭！");
     }
 }
